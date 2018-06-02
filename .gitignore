@@ -1,5 +1,7 @@
 # Prerequisites
 *.d
+ft_retro
+*.dSYM
 
 # Compiled Object files
 *.slo
