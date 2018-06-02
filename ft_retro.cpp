@@ -6,7 +6,7 @@
 /*   By: lfabbro <>                                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/30 15:16:28 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/06/02 23:53:43 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/06/03 00:05:50 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int			main(void)
 		GM.spawnEntity();
 		GM.moveEntities();
 		//GM.displayEntities();
+		GM.checkPlayerCollision();
 		wrefresh(GM.win);
 		if (GM.ch == 'q' || GM.ch == 'Q')
 			break;

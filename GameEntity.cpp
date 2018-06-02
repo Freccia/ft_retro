@@ -82,11 +82,11 @@ bool				GameEntity::updatePosition(int winX, int winY) {
 		return true;
 	this->_pos.x += this->_dir.x;
 	this->_pos.y += this->_dir.y;
-	if (this->_pos.x > winX - 2 || this->_pos.x < 1) {
+	if (this->_pos.x > winX - 2 || this->_pos.x < 2) {
 		this->collided = true;
 		return false;
 	}
-	if (this->_pos.y > winY - 2 || this->_pos.y < 1) {
+	if (this->_pos.y > winY - 2 || this->_pos.y < 2) {
 		this->collided = true;
 		return false;
 	}

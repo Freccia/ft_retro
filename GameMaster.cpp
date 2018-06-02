@@ -53,10 +53,10 @@ void		GameMaster::resizeHandler(int sig) {
 void		GameMaster::spawnEntity(void) {
 	this->nEntities++;
 	if (this->start) {
-		this->start = new GameEntity("(", this->winX - 10, this->winY - 2, -1, 0, this->start);
+		this->start = new GameEntity("(", this->winX - 2, this->winY / 2, -1, 0, this->start);
 	}
 	else {
-		this->start = new GameEntity("(", this->winX - 10, this->winY - 2, -1, 0, NULL);
+		this->start = new GameEntity("(", this->winX - 2, this->winY / 2, -1, 0, NULL);
 	}
 }
 
