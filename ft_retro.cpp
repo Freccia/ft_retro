@@ -6,7 +6,7 @@
 /*   By: lfabbro <>                                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/30 15:16:28 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/06/02 23:18:31 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/06/02 23:53:43 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,13 @@ int			main(void)
 		GM.ch = getch();
 		GM.movePlayer();
 		GM.spawnEntity();
-		GM.displayEntities();
+		GM.moveEntities();
+		//GM.displayEntities();
 		wrefresh(GM.win);
 		if (GM.ch == 'q' || GM.ch == 'Q')
 			break;
 
-		usleep(3000);
+		usleep(30000);
 	}
 
 	// TODO: GAMEOVER MESSAGE

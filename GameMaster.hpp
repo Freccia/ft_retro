@@ -14,6 +14,8 @@ private:
 	int				winX;
 	int				winY;
 
+	int				nEntities;
+
 public:
 	GameMaster(void);
 	~GameMaster(void);
@@ -21,6 +23,7 @@ public:
 	/*		Members functions		*/
 	static void		resizeHandler(int sig);
 	void			movePlayer(void);
+	void			moveEntities(void);
 	bool			checkPlayerCollision(void);
 	void			spawnEntity(void);
 	void			displayEntities(void);

@@ -77,16 +77,19 @@ bool				GameEntity::setPosition(int x, int y) {
 }
 
 
-bool				GameEntity::updatePosition(void) {
-	mvprintw(this->getPosY(), this->getPosX(), " ");
+bool				GameEntity::updatePosition(int winX, int winY) {
 	if (this->collided == true)
 		return true;
 	this->_pos.x += this->_dir.x;
 	this->_pos.y += this->_dir.y;
-	if (this->_pos.x > COLS - 1 || this->_pos.x < 0)
+	if (this->_pos.x > winX - 2 || this->_pos.x < 1) {
+		this->collided = true;
 		return false;
-	if (this->_pos.y > LINES - 1|| this->_pos.y < 0)
+	}
+	if (this->_pos.y > winY - 2 || this->_pos.y < 1) {
+		this->collided = true;
 		return false;
+	}
 	return true;
 }
 

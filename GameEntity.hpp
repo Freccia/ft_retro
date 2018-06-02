@@ -20,6 +20,7 @@ protected:
 	std::string			_shape;
 	s_vector			_pos;
 	s_vector			_dir; // TODO: who needs it?
+	clock_t				_lastUpdate;
 
 public:
 	GameEntity(std::string shape, int px, int py, int dx, int dy, GameEntity *next);
@@ -35,7 +36,7 @@ public:
 	bool				setShape(std::string shape);
 	bool				setPosition(int x, int y);
 
-	virtual bool		updatePosition(void);
+	virtual bool		updatePosition(int winX, int winY);
 	bool				checkCollision(GameEntity *entity);
 
 	/*		Attributes		*/

@@ -21,13 +21,26 @@ GameMaster::GameMaster(void)
 	box(win, '|', '-');
 
 	this->start = NULL;
+	this->nEntities = 0;
 
 	signal(SIGWINCH, &GameMaster::resizeHandler);
 }
 
 GameMaster::~GameMaster(void) {
 	endwin();
+	GameEntity	*p = this->start;
+	int i = 0;
+	while (p)
+	{
+		i++;
+	//	std::cout << i << ": " << p->getPosX() << " " << p->getPosY() <<std::endl;
+		p = p->next;
+	}
+	std::cout << "ENTITIES: " << i <<std::endl;
 	std::cout << "LINES: " << LINES <<std::endl;
+	std::cout << "COLS: " << COLS <<std::endl;
+	std::cout << "WINX: " << this->winX <<std::endl;
+	std::cout << "WINY: " << this->winY <<std::endl;
 }
 
 void		GameMaster::resizeHandler(int sig) {
@@ -38,19 +51,37 @@ void		GameMaster::resizeHandler(int sig) {
 }
 
 void		GameMaster::spawnEntity(void) {
+	this->nEntities++;
 	if (this->start) {
-		GameEntity		*e = new GameEntity("(", LINES/2, COLS/2, -1, 0, this->start);
-		this->start = e;
+		this->start = new GameEntity("(", this->winX - 10, this->winY - 2, -1, 0, this->start);
 	}
-	else
-		this->start = new GameEntity("(", LINES/2, COLS/2, -1, 0, NULL);
+	else {
+		this->start = new GameEntity("(", this->winX - 10, this->winY - 2, -1, 0, NULL);
+	}
 }
 
+/*
 void		GameMaster::displayEntities(void) {
 	GameEntity		*ptr = this->start;
 
 	while (ptr) {
+		mvwprintw(this->win, ptr->getPosY(), ptr->getPosX(), ptr->getShape().c_str());
+		ptr = ptr->next;
+	}
+}
+*/
+
+void		GameMaster::moveEntities(void) {
+	GameEntity		*ptr = this->start;
+
+	while (ptr) {
 		mvwprintw(this->win, ptr->getPosY(), ptr->getPosX(), " ");
+		ptr->updatePosition(this->winX, this->winY);
+		ptr = ptr->next;
+	}
+	ptr = this->start;
+	while (ptr) {
+		mvwprintw(this->win, ptr->getPosY(), ptr->getPosX(), ptr->getShape().c_str());
 		ptr = ptr->next;
 	}
 }
