@@ -11,6 +11,7 @@
 #define MIN_TERM_X 50
 #define MIN_TERM_Y 30
 #define STARS_NB 20
+#define DIFFICULTY_SPEED 15000
 
 class GameMaster {
 private:
@@ -26,6 +27,8 @@ private:
 	int				nEntities;
 	clock_t			begin_time;
 	clock_t			timeScore;
+	clock_t			lastTime;
+	int				difficultyLevel;
 
 	GameEntity		_scenery[STARS_NB];
 
@@ -39,6 +42,7 @@ public:
 	static void		resizeHandler(int sig);
 	void			getKey(void);
 	int				getCharacter(void);
+	int				getDifficultyLevel(void);
 	void			movePlayer(void);
 	void			moveEnnemies(void);
 	void			moveShoots(void);

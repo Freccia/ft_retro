@@ -1,4 +1,5 @@
 #include "GameMaster.hpp"
+#include "NastyFive.hpp"
 #include <ncurses.h>
 #include <signal.h>
 #include <cstdlib>
@@ -31,6 +32,8 @@ timeScore(0)
 	this->ennemies = NULL;
 	this->shoots = NULL;
 	this->nEntities = 0;
+	this->difficultyLevel = 30000;
+	this->lastTime = 0;
 
 	initScenery();
 
@@ -80,12 +83,19 @@ int			GameMaster::getCharacter(void) {
 	return this->ch;
 }
 
+int			GameMaster::getDifficultyLevel(void) {
+	return this->difficultyLevel;
+}
+
 void		GameMaster::spawnEntity(void) {
 	srand(std::time(0) * std::time(0));
 	int		r = rand() % this->winY;
 	this->nEntities++;
 	if (this->ennemies) {
-		this->ennemies = new GameEntity("(", this->winX - 2, r, -1, 0, this->ennemies);
+		if (r % 2)
+			this->ennemies = new GameEntity("(", this->winX - 2, r, -1, 0, this->ennemies);
+		else
+			this->ennemies = new NastyFive("5", this->winX - 2, r, -1, 0, this->ennemies);
 	}
 	else {
 		this->ennemies = new GameEntity("(", this->winX - 2, r, -1, 0, NULL);
@@ -121,11 +131,18 @@ void		GameMaster::displayBanner(void) {
 	std::string		msg = "    TIMESCORE: ";
 	this->timeScore = float(clock() - this->begin_time);
 	msg.append(std::to_string(this->timeScore));
+	msg.append("    DIFFICULTY: ");
+	msg.append(std::to_string(this->difficultyLevel));
 	mvprintw(WINBOXY - 2, WINBOXX, msg.c_str());
 	mvprintw(WINBOXY - 3, WINBOXX, "        ");
 }
 
 void		GameMaster::refreshWindow(void) {
+	if (clock() - this->lastTime > DIFFICULTY_SPEED) {
+		if (this->difficultyLevel > 10000)
+			this->difficultyLevel -= 50;
+		this->lastTime = clock();
+	}
 	wrefresh(this->win);
 }
 

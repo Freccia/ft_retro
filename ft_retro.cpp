@@ -6,7 +6,7 @@
 /*   By: lfabbro <>                                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/30 15:16:28 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/06/03 14:35:23 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/06/03 15:29:17 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ play:
 		if (GM.getCharacter() == 'q' || GM.getCharacter() == 'Q')
 			break;
 
-		usleep(30000);
+		usleep(GM.getDifficultyLevel());
 	}
 
 	if (GM.gameOverBanner() == true)
