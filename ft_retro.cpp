@@ -26,11 +26,12 @@ int			main(void)
 
 	//windowBox = subwin(stdscr, _maxY + 2, _maxX + 2, (LINES / 2) - (_maxY / 2), (COLS / 2) - (_maxX / 2));
 	//box(_windowBox, ACS_VLINE, ACS_HLINE);
-	
+
 
 	while(42)
 	{
 		GM.displayBanner();
+		GM.displayScenery();
 		GM.ch = getch();
 		GM.movePlayer();
 		GM.spawnEntity();
@@ -41,14 +42,14 @@ int			main(void)
 		GM.destroyEntitiesCollision(&GM.ennemies);
 		GM.destroyEntitiesCollision(&GM.shoots);
 		GM.displayAllEntities();
-	
+
 		wrefresh(GM.win);
 		if (GM.ch == 'q' || GM.ch == 'Q')
 			break;
 
 		usleep(30000);
 	}
-
+	// while(1);
 	// TODO: GAMEOVER MESSAGE
 
 	return 0;

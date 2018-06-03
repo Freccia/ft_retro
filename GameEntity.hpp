@@ -14,7 +14,6 @@ private:
 	/*	UNUSED		*/
 	GameEntity				&operator = (GameEntity const &Cc);
 	GameEntity(GameEntity const &Cc);
-	GameEntity(void);
 
 protected:
 	std::string			_shape;
@@ -23,6 +22,7 @@ protected:
 	clock_t				_lastUpdate;
 
 public:
+	GameEntity(void);
 	GameEntity(std::string shape, int px, int py, int dx, int dy, GameEntity *next);
 	virtual ~GameEntity(void);
 

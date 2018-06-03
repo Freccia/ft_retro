@@ -10,6 +10,7 @@
 #define WINBOXY 10
 #define MIN_TERM_X 50
 #define MIN_TERM_Y 30
+#define STARS_NB 20
 
 class GameMaster {
 private:
@@ -22,6 +23,10 @@ private:
 	int				nEntities;
 	clock_t			begin_time;
 	clock_t			timeScore;
+
+	GameEntity		_scenery[STARS_NB];
+
+	void			initScenery(void);
 
 public:
 	GameMaster(void);
@@ -38,6 +43,7 @@ public:
 	void			manageCollisionsWith(GameEntity *entity, GameEntity *list);
 	void			displayAllEntities(void);
 	void			displayBanner(void);
+	void			displayScenery(void);
 
 	/*		Attributes		*/
 	WINDOW			*win;
