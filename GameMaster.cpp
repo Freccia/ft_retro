@@ -32,8 +32,8 @@ timeScore(0)
 	this->ennemies = NULL;
 	this->shoots = NULL;
 	this->nEntities = 0;
-	this->difficultyLevel = 30000;
-	this->lastTime = 0;
+	this->difficultyLevel = DIFFICULTY_LEVEL;
+	this->lastTime = clock();
 
 	initScenery();
 
@@ -112,16 +112,19 @@ bool		GameMaster::gameOverBanner(void) {
 	msg = "                     ";
 	mvwprintw(this->win, (this->winY / 2) - 5, (this->winX / 2) - 10, msg.c_str());
 	mvwprintw(this->win, (this->winY / 2) - 4, (this->winX / 2) - 10, msg.c_str());
+	mvprintw(WINBOXY - 2, WINBOXX, "                                                                ");
 	if (c == 'Y' || c == 'y') {
 		// reinitialize all
 		this->destroyEntities(&this->ennemies);
 		this->destroyEntities(&this->shoots);
 		mvwprintw(this->win, this->pl.getPosY(), this->pl.getPosX(), " ");
-		this->pl.setPosition(1, 1);
-		this->begin_time = clock();
-		this->timeScore = 0;
+		this->pl.setPosition(2, 2);
 		this->ch = 0;
 		this->nEntities = 0;
+		this->begin_time = clock();
+		this->timeScore = 0;
+		this->lastTime = clock();
+		this->difficultyLevel = DIFFICULTY_LEVEL;
 		return true;
 	}
 	return false;
@@ -212,6 +215,8 @@ void		GameMaster::displayAllEntities(void) {
 }
 
 void		GameMaster::movePlayer(void) {
+	GameEntity		*tmp = NULL;
+
 	mvwprintw(this->win, this->pl.getPosY(), this->pl.getPosX(), " ");
 	if (this->ch == KEY_LEFT) {
 		if (this->pl.getPosX() > 2)
@@ -230,8 +235,10 @@ void		GameMaster::movePlayer(void) {
 			this->pl.setPosition(this->pl.getPosX(), this->pl.getPosY() + 1);
 	}
 	else if (this->ch == ' ') {
-		if (this->pl.getPosX() < this->winX - 3)
-			this->shoots = this->pl.shoot(this->shoots);
+		if (this->pl.getPosX() < this->winX - 3) {
+			tmp = this->pl.shoot(this->shoots);
+			this->shoots = (tmp != NULL) ? tmp : this->shoots;
+		}
 	}
 	mvwprintw(this->win, this->pl.getPosY(), this->pl.getPosX(), this->pl.getShape().c_str());
 }

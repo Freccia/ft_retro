@@ -12,6 +12,7 @@
 #define MIN_TERM_Y 30
 #define STARS_NB 20
 #define DIFFICULTY_SPEED 15000
+#define DIFFICULTY_LEVEL 30000
 
 class GameMaster {
 private:

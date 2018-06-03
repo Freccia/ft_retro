@@ -11,6 +11,8 @@ private:
 	Player(Player const &Cc);
 	Player				&operator = (Player const &Cc);
 
+	clock_t				_lastShot;
+
 public:
 	Player(void);
 	virtual ~Player(void);
