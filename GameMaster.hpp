@@ -28,18 +28,22 @@ public:
 	/*		Members functions		*/
 	static void		resizeHandler(int sig);
 	void			movePlayer(void);
-	void			moveEntities(void);
+	void			moveEnnemies(void);
+	void			moveShoots(void);
 	bool			checkPlayerCollision(void);
 	void			spawnEntity(void);
 	void			displayEntities(void);
-	void			destroyEntitiesCollision(void);
+	void			destroyEntitiesCollision(GameEntity ** start);
+	void			manageShootsCollisions(GameEntity *entity);
+	void			displayAllEntities(void);
 	void			displayBanner(void);
 
 	/*		Attributes		*/
 	WINDOW			*win;
 	Player			pl;
 	int				ch;
-	GameEntity		*start;
+	GameEntity		*ennemies;
+	GameEntity		*shoots;
 
 };
 
