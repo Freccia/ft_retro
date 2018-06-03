@@ -125,3 +125,35 @@ bool			GameMaster::checkPlayerCollision(void) {
 	}
 	return false;
 }
+
+void		GameMaster::destroyEntitiesCollision(void) {
+	GameEntity    *current;
+	GameEntity    *suppr;
+
+	if (start != NULL)
+	{
+		current = start;
+		while (current->next != NULL)
+		{
+			if (current->next->collided == true)
+			{
+				suppr = current->next;
+				current->next = current->next->next;
+				delete suppr;
+				this->nEntities--;
+			}
+			else
+				current = current->next;
+		}
+		if (start != NULL)
+		{
+			if (start->collided == true)
+			{
+				suppr = start;
+				start = start->next;
+				delete suppr;
+				this->nEntities--;
+			}
+		}
+	}
+}

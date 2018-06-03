@@ -27,6 +27,7 @@ public:
 	bool			checkPlayerCollision(void);
 	void			spawnEntity(void);
 	void			displayEntities(void);
+	void			destroyEntitiesCollision(void);
 
 	/*		Attributes		*/
 	WINDOW			*win;
