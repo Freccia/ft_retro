@@ -33,8 +33,8 @@ int			main(void)
 		GM.movePlayer();
 		GM.spawnEntity();
 		GM.moveEntities();
-		//GM.displayEntities();
-		GM.checkPlayerCollision();
+		if (GM.checkPlayerCollision() == true)
+			break ;
 		wrefresh(GM.win);
 		if (GM.ch == 'q' || GM.ch == 'Q')
 			break;
