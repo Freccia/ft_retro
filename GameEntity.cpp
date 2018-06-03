@@ -86,7 +86,7 @@ bool				GameEntity::updatePosition(int winX, int winY) {
 		this->collided = true;
 		return false;
 	}
-	if (this->_pos.y > winY - 2 || this->_pos.y < 2) {
+	if (this->_pos.y > winY - 1 || this->_pos.y < 1) {
 		this->collided = true;
 		return false;
 	}
