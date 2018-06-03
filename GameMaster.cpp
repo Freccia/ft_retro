@@ -7,8 +7,15 @@
 #include <unistd.h>
 
 GameMaster::GameMaster(void) :
+_ch(0),
+_nEntities(0),
 _begin_time(clock()),
-_timeScore(0)
+_timeScore(0),
+_lastTime(0),
+_difficultyLevel(DIFFICULTY_LEVEL),
+_superFancyPoints(0),
+ennemies(NULL),
+shoots(NULL)
 {
 	initscr();
 	if (LINES < MIN_TERM_Y || COLS < MIN_TERM_X)
@@ -29,13 +36,15 @@ _timeScore(0)
 	this->_win = subwin(stdscr, this->_winY, this->_winX, WINBOXY, WINBOXX);
 	box(_win, '|', '-');
 
+	/*
 	this->ennemies = NULL;
 	this->shoots = NULL;
 	this->_nEntities = 0;
 	this->_difficultyLevel = DIFFICULTY_LEVEL;
 	this->_lastTime = 0;
+	*/
 
-	initScenery();
+	this->initScenery();
 
 	signal(SIGWINCH, &GameMaster::resizeHandler);
 }
@@ -133,6 +142,7 @@ bool		GameMaster::gameOverBanner(void) {
 		this->_ch = 0;
 		this->_nEntities = 0;
 		this->_difficultyLevel = DIFFICULTY_LEVEL;
+		this->_superFancyPoints = 0;
 		return true;
 	}
 	return false;
@@ -144,6 +154,8 @@ void		GameMaster::displayBanner(void) {
 	msg.append(std::to_string(this->_timeScore));
 	msg.append("    DIFFICULTY: ");
 	msg.append(std::to_string(this->_difficultyLevel));
+	msg.append("    SUPERFANCYPOINTS: ");
+	msg.append(std::to_string(this->_superFancyPoints));
 	mvprintw(WINBOXY - 2, WINBOXX, msg.c_str());
 	mvprintw(WINBOXY - 3, WINBOXX, "        ");
 }
@@ -260,6 +272,11 @@ bool			GameMaster::checkPlayerCollision(void) {
 			this->_pl.getPosY() == ptr->getPosY())
 			return true;
 		ptr = ptr->next;
+	}
+	if (this->_pl.getPosX() >= this->_winX - 3) {
+		this->_superFancyPoints++;
+		mvwprintw(this->_win, this->_pl.getPosY(), this->_pl.getPosX(), " ");
+		this->_pl.setPosition(2, this->_pl.getPosY());
 	}
 	return false;
 }

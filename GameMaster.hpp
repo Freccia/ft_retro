@@ -30,6 +30,7 @@ private:
 	clock_t			_timeScore;
 	clock_t			_lastTime;
 	int				_difficultyLevel;
+	unsigned int	_superFancyPoints;
 
 	GameEntity		_scenery[STARS_NB];
 
