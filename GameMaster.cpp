@@ -63,7 +63,6 @@ void		GameMaster::resizeHandler(int sig) {
 
 void		GameMaster::spawnEntity(void) {
 
-	// t_time
 	this->nEntities++;
 	if (this->ennemies) {
 		this->ennemies = new GameEntity("(", this->winX - 2, this->winY / 2, -1, 0, this->ennemies);
@@ -73,28 +72,17 @@ void		GameMaster::spawnEntity(void) {
 	}
 }
 
-/*
-void		GameMaster::displayEntities(void) {
-	GameEntity		*ptr = this->ennemies;
-
-	while (ptr) {
-		mvwprintw(this->win, ptr->getPosY(), ptr->getPosX(), ptr->getShape().c_str());
-		ptr = ptr->next;
-	}
-}
-*/
-
-void		GameMaster::manageShootsCollisions(GameEntity *entity_to_check) {
+void		GameMaster::manageCollisionsWith(GameEntity *entity, GameEntity *list) {
 
 	GameEntity * current;
 
-	current = this->shoots;
+	current = list;
 	while (current)
 	{
-		if (entity_to_check->checkCollision(current) == true)
+		if (entity->checkCollision(current) == true)
 		{
 			current->collided = true;
-			entity_to_check->collided = true;
+			entity->collided = true;
 		}
 		current = current->next;
 	}
@@ -106,7 +94,7 @@ void		GameMaster::moveEnnemies(void) {
 	while (ptr) {
 		mvwprintw(this->win, ptr->getPosY(), ptr->getPosX(), " ");
 		ptr->updatePosition(this->winX, this->winY);
-		manageShootsCollisions(ptr);
+		manageCollisionsWith(ptr, this->shoots);
 		ptr = ptr->next;
 	}
 }
@@ -117,8 +105,10 @@ void		GameMaster::moveShoots(void) {
 	while (ptr) {
 		mvwprintw(this->win, ptr->getPosY(), ptr->getPosX(), " ");
 		if (ptr->collided == false)
+		{
 			ptr->updatePosition(this->winX, this->winY);
-		// manageShootsCollisions(ptr);
+			manageCollisionsWith(ptr, this->ennemies);
+		}
 		ptr = ptr->next;
 	}
 }

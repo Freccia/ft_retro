@@ -29,7 +29,7 @@ public:
 	void			spawnEntity(void);
 	void			displayEntities(void);
 	void			destroyEntitiesCollision(GameEntity ** start);
-	void			manageShootsCollisions(GameEntity *entity);
+	void			manageCollisionsWith(GameEntity *entity, GameEntity *list);
 	void			displayAllEntities(void);
 
 	/*		Attributes		*/
