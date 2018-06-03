@@ -7,7 +7,7 @@
 
 GameMaster::GameMaster(void) :
 begin_time(clock()),
-_lastSpawn(0)
+timeScore(0)
 {
 	initscr();
 	noecho();
@@ -64,56 +64,36 @@ void		GameMaster::resizeHandler(int sig) {
 }
 
 void		GameMaster::spawnEntity(void) {
-	//float time = float(clock() - this->_lastSpawn);
-	//if (time < 90.0)
-	//	return;
-	mvprintw(WINBOXY - 3, WINBOXX, "SPAWN!!");
-	this->_lastSpawn = clock() - this->_lastSpawn;
-	if (this->ennemies == NULL) {
-		this->ennemies = new GameEntity("(", this->winX - 2, this->winY / 2, -1, 0, NULL);
-		this->nEntities++;
+	srand(std::time(0));
+	int		r = rand() % this->winY - 2;
+	this->nEntities++;
+	if (this->ennemies) {
+		this->ennemies = new GameEntity("(", this->winX - 2, r, -1, 0, this->ennemies);
 	}
-	for (int i=0; i < 20; i++) {
-		this->ennemies = new GameEntity("(", this->winX + i, this->winY / 2, -1, 0, this->ennemies);
-		this->nEntities++;
+	else {
+		this->ennemies = new GameEntity("(", this->winX - 2, r, -1, 0, NULL);
 	}
 }
-
-/*
-void		GameMaster::displayEntities(void) {
-	GameEntity		*ptr = this->ennemies;
-
-	while (ptr) {
-		mvwprintw(this->win, ptr->getPosY(), ptr->getPosX(), ptr->getShape().c_str());
-		ptr = ptr->next;
-	}
-}
-*/
 
 void		GameMaster::displayBanner(void) {
-	float time = float(clock() - this->begin_time);
-	std::string		msg = "CLOCK: ";
-	msg.append(std::to_string(time));
-	msg.append("    LASTSPAWN: ");
-	msg.append(std::to_string(this->_lastSpawn));
-	time = float(clock() - this->_lastSpawn);
-	msg.append("    DIFF: ");
-	msg.append(std::to_string(time));
+	std::string		msg = "    TIMESCORE: ";
+	this->timeScore = float(clock() - this->begin_time);
+	msg.append(std::to_string(this->timeScore));
 	mvprintw(WINBOXY - 2, WINBOXX, msg.c_str());
 	mvprintw(WINBOXY - 3, WINBOXX, "        ");
 }
 
-void		GameMaster::manageShootsCollisions(GameEntity *entity_to_check) {
+void		GameMaster::manageCollisionsWith(GameEntity *entity, GameEntity *list) {
 
 	GameEntity * current;
 
-	current = this->shoots;
+	current = list;
 	while (current)
 	{
-		if (entity_to_check->checkCollision(current) == true)
+		if (entity->checkCollision(current) == true)
 		{
 			current->collided = true;
-			entity_to_check->collided = true;
+			entity->collided = true;
 		}
 		current = current->next;
 	}
@@ -125,7 +105,7 @@ void		GameMaster::moveEnnemies(void) {
 	while (ptr) {
 		mvwprintw(this->win, ptr->getPosY(), ptr->getPosX(), " ");
 		ptr->updatePosition(this->winX, this->winY);
-		manageShootsCollisions(ptr);
+		manageCollisionsWith(ptr, this->shoots);
 		ptr = ptr->next;
 	}
 }
@@ -136,8 +116,10 @@ void		GameMaster::moveShoots(void) {
 	while (ptr) {
 		mvwprintw(this->win, ptr->getPosY(), ptr->getPosX(), " ");
 		if (ptr->collided == false)
+		{
 			ptr->updatePosition(this->winX, this->winY);
-		// manageShootsCollisions(ptr);
+			manageCollisionsWith(ptr, this->ennemies);
+		}
 		ptr = ptr->next;
 	}
 }
@@ -161,7 +143,7 @@ void		GameMaster::displayAllEntities(void) {
 void		GameMaster::movePlayer(void) {
 	mvwprintw(this->win, this->pl.getPosY(), this->pl.getPosX(), " ");
 	if (this->ch == KEY_LEFT) {
-		if (this->pl.getPosX() > 1)
+		if (this->pl.getPosX() > 2)
 			this->pl.setPosition(this->pl.getPosX() - 1, this->pl.getPosY());
 	}
 	else if (this->ch == KEY_RIGHT) {

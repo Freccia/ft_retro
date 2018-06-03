@@ -19,7 +19,7 @@ private:
 
 	int				nEntities;
 	clock_t			begin_time;
-	clock_t			_lastSpawn;
+	clock_t			timeScore;
 
 public:
 	GameMaster(void);
@@ -34,7 +34,7 @@ public:
 	void			spawnEntity(void);
 	void			displayEntities(void);
 	void			destroyEntitiesCollision(GameEntity ** start);
-	void			manageShootsCollisions(GameEntity *entity);
+	void			manageCollisionsWith(GameEntity *entity, GameEntity *list);
 	void			displayAllEntities(void);
 	void			displayBanner(void);
 

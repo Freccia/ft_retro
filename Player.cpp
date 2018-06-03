@@ -6,14 +6,14 @@
 /*   By: lfabbro <>                                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/30 16:13:01 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/06/02 23:10:27 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/06/03 12:14:42 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Player.hpp"
 #include <ncurses.h>
 
-Player::Player(void): GameEntity(">", 1, 1, 0, 0, NULL) {
+Player::Player(void): GameEntity(">", 2, 1, 0, 0, NULL) {
 }
 
 Player::~Player(void) {

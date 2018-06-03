@@ -99,8 +99,6 @@ bool				GameEntity::checkCollision(GameEntity *entity) {
 	int		x = entity->getPosX();
 	int		y = entity->getPosY();
 	if (this->_pos.x == x && this->_pos.y == y) {
-		// this->collided = true;
-		// entity->collided = true;
 		return true; // collision happened
 	}
 	return false; // no collision
