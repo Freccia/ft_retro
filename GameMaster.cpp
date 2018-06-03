@@ -42,12 +42,13 @@ _timeScore(0)
 
 GameMaster::~GameMaster(void) {
 	endwin();
-	GameEntity	*p = this->ennemies;
+
+	/* debug */
+	/* GameEntity	*p = this->ennemies;
 	int i = 0;
 	while (p)
 	{
 		i++;
-	//	std::cout << i << ": " << p->getPosX() << " " << p->getPosY() <<std::endl;
 		p = p->next;
 	}
 
@@ -56,16 +57,15 @@ GameMaster::~GameMaster(void) {
 	while (p)
 	{
 		j++;
-	//	std::cout << i << ": " << p->getPosX() << " " << p->getPosY() <<std::endl;
 		p = p->next;
 	}
+	std::cout << "CHAR: " << this->_ch <<std::endl;
 	std::cout << "ENNEMIES: " << i <<std::endl;
 	std::cout << "SHOOTS: " << j <<std::endl;
 	std::cout << "LINES: " << LINES <<std::endl;
 	std::cout << "COLS: " << COLS <<std::endl;
 	std::cout << "_WINX: " << this->_winX <<std::endl;
-	std::cout << "_WINY: " << this->_winY <<std::endl;
-	std::cout << "CHAR: " << this->_ch <<std::endl;
+	std::cout << "_WINY: " << this->_winY <<std::endl; */
 }
 
 void		GameMaster::resizeHandler(int sig) {
