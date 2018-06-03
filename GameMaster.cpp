@@ -5,7 +5,8 @@
 #include <ctime>
 #include <unistd.h>
 
-GameMaster::GameMaster(void)
+GameMaster::GameMaster(void) :
+begin_time(clock())
 {
 	initscr();
 	noecho();
@@ -17,7 +18,7 @@ GameMaster::GameMaster(void)
 
 	this->winY = LINES - (LINES/2);
 	this->winX = COLS - (LINES/2);
-	this->win = subwin(stdscr, this->winY, this->winX, 10, 10);
+	this->win = subwin(stdscr, this->winY, this->winX, WINBOXY, WINBOXX);
 	box(win, '|', '-');
 
 	this->ennemies = NULL;
@@ -70,6 +71,12 @@ void		GameMaster::spawnEntity(void) {
 	else {
 		this->ennemies = new GameEntity("(", this->winX - 2, this->winY / 2, -1, 0, NULL);
 	}
+}
+
+void		GameMaster::displayBanner(void) {
+	this->_time = float(clock() - this->begin_time);
+	std::string		msg = std::to_string(this->_time);
+	mvprintw(WINBOXY - 2, WINBOXX, msg.c_str());
 }
 
 void		GameMaster::manageCollisionsWith(GameEntity *entity, GameEntity *list) {
