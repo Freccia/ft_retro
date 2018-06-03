@@ -6,6 +6,9 @@
 #include "GameEntity.hpp"
 #include "Player.hpp"
 
+#define WINBOXX 10
+#define WINBOXY 10
+
 class GameMaster {
 private:
 	GameMaster(GameMaster const &Cc);
@@ -15,6 +18,8 @@ private:
 	int				winY;
 
 	int				nEntities;
+	clock_t			begin_time;
+	float			_time;
 
 public:
 	GameMaster(void);
@@ -28,6 +33,7 @@ public:
 	void			spawnEntity(void);
 	void			displayEntities(void);
 	void			destroyEntitiesCollision(void);
+	void			displayBanner(void);
 
 	/*		Attributes		*/
 	WINDOW			*win;
