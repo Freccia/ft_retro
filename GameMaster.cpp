@@ -20,7 +20,8 @@ GameMaster::GameMaster(void)
 	this->win = subwin(stdscr, this->winY, this->winX, 10, 10);
 	box(win, '|', '-');
 
-	this->start = NULL;
+	this->ennemies = NULL;
+	this->shoots = NULL;
 	this->nEntities = 0;
 
 	signal(SIGWINCH, &GameMaster::resizeHandler);
@@ -28,7 +29,7 @@ GameMaster::GameMaster(void)
 
 GameMaster::~GameMaster(void) {
 	endwin();
-	GameEntity	*p = this->start;
+	GameEntity	*p = this->ennemies;
 	int i = 0;
 	while (p)
 	{
@@ -36,7 +37,17 @@ GameMaster::~GameMaster(void) {
 	//	std::cout << i << ": " << p->getPosX() << " " << p->getPosY() <<std::endl;
 		p = p->next;
 	}
-	std::cout << "ENTITIES: " << i <<std::endl;
+
+	p = this->shoots;
+	int j = 0;
+	while (p)
+	{
+		j++;
+	//	std::cout << i << ": " << p->getPosX() << " " << p->getPosY() <<std::endl;
+		p = p->next;
+	}
+	std::cout << "ENNEMIES: " << i <<std::endl;
+	std::cout << "SHOOTS: " << j <<std::endl;
 	std::cout << "LINES: " << LINES <<std::endl;
 	std::cout << "COLS: " << COLS <<std::endl;
 	std::cout << "WINX: " << this->winX <<std::endl;
@@ -51,18 +62,20 @@ void		GameMaster::resizeHandler(int sig) {
 }
 
 void		GameMaster::spawnEntity(void) {
+
+	// t_time
 	this->nEntities++;
-	if (this->start) {
-		this->start = new GameEntity("(", this->winX - 2, this->winY / 2, -1, 0, this->start);
+	if (this->ennemies) {
+		this->ennemies = new GameEntity("(", this->winX - 2, this->winY / 2, -1, 0, this->ennemies);
 	}
 	else {
-		this->start = new GameEntity("(", this->winX - 2, this->winY / 2, -1, 0, NULL);
+		this->ennemies = new GameEntity("(", this->winX - 2, this->winY / 2, -1, 0, NULL);
 	}
 }
 
 /*
 void		GameMaster::displayEntities(void) {
-	GameEntity		*ptr = this->start;
+	GameEntity		*ptr = this->ennemies;
 
 	while (ptr) {
 		mvwprintw(this->win, ptr->getPosY(), ptr->getPosX(), ptr->getShape().c_str());
@@ -71,15 +84,55 @@ void		GameMaster::displayEntities(void) {
 }
 */
 
-void		GameMaster::moveEntities(void) {
-	GameEntity		*ptr = this->start;
+void		GameMaster::manageShootsCollisions(GameEntity *entity_to_check) {
+
+	GameEntity * current;
+
+	current = this->shoots;
+	while (current)
+	{
+		if (entity_to_check->checkCollision(current) == true)
+		{
+			current->collided = true;
+			entity_to_check->collided = true;
+		}
+		current = current->next;
+	}
+}
+
+void		GameMaster::moveEnnemies(void) {
+	GameEntity		*ptr = this->ennemies;
 
 	while (ptr) {
 		mvwprintw(this->win, ptr->getPosY(), ptr->getPosX(), " ");
 		ptr->updatePosition(this->winX, this->winY);
+		manageShootsCollisions(ptr);
 		ptr = ptr->next;
 	}
-	ptr = this->start;
+}
+
+void		GameMaster::moveShoots(void) {
+	GameEntity		*ptr = this->shoots;
+
+	while (ptr) {
+		mvwprintw(this->win, ptr->getPosY(), ptr->getPosX(), " ");
+		if (ptr->collided == false)
+			ptr->updatePosition(this->winX, this->winY);
+		// manageShootsCollisions(ptr);
+		ptr = ptr->next;
+	}
+}
+
+
+void		GameMaster::displayAllEntities(void) {
+	GameEntity		*ptr;
+
+	ptr = this->shoots;
+	while (ptr) {
+		mvwprintw(this->win, ptr->getPosY(), ptr->getPosX(), ptr->getShape().c_str());
+		ptr = ptr->next;
+	}
+	ptr = this->ennemies;
 	while (ptr) {
 		mvwprintw(this->win, ptr->getPosY(), ptr->getPosX(), ptr->getShape().c_str());
 		ptr = ptr->next;
@@ -105,10 +158,10 @@ void		GameMaster::movePlayer(void) {
 			this->pl.setPosition(this->pl.getPosX(), this->pl.getPosY() + 1);
 	}
 	else if (this->ch == ' ') {
-		if (this->start != NULL)
-			this->start = this->pl.shoot(this->start);
+		if (this->shoots != NULL)
+			this->shoots = this->pl.shoot(this->shoots);
 		else
-			this->start = this->pl.shoot(NULL);
+			this->shoots = this->pl.shoot(NULL);
 	}
 	mvwprintw(this->win, this->pl.getPosY(), this->pl.getPosX(), this->pl.getShape().c_str());
 }
@@ -116,7 +169,7 @@ void		GameMaster::movePlayer(void) {
 bool			GameMaster::checkPlayerCollision(void) {
 	GameEntity		*ptr;
 
-	ptr = this->start;
+	ptr = this->ennemies;
 	while (ptr) {
 		if (this->pl.getPosX() == ptr->getPosX() &&
 			this->pl.getPosY() == ptr->getPosY())
@@ -126,13 +179,13 @@ bool			GameMaster::checkPlayerCollision(void) {
 	return false;
 }
 
-void		GameMaster::destroyEntitiesCollision(void) {
+void		GameMaster::destroyEntitiesCollision(GameEntity ** start) {
 	GameEntity    *current;
 	GameEntity    *suppr;
 
-	if (start != NULL)
+	if (*start != NULL)
 	{
-		current = start;
+		current = *start;
 		while (current->next != NULL)
 		{
 			if (current->next->collided == true)
@@ -145,12 +198,12 @@ void		GameMaster::destroyEntitiesCollision(void) {
 			else
 				current = current->next;
 		}
-		if (start != NULL)
+		if (*start != NULL)
 		{
-			if (start->collided == true)
+			if ((*start)->collided == true)
 			{
-				suppr = start;
-				start = start->next;
+				suppr = *start;
+				*start = (*start)->next;
 				delete suppr;
 				this->nEntities--;
 			}

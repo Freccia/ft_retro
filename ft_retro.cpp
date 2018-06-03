@@ -32,10 +32,14 @@ int			main(void)
 		GM.ch = getch();
 		GM.movePlayer();
 		GM.spawnEntity();
-		GM.moveEntities();
-		GM.destroyEntitiesCollision();
+		GM.moveEnnemies();
+		GM.moveShoots();
 		if (GM.checkPlayerCollision() == true)
 			break ;
+		GM.destroyEntitiesCollision(&GM.ennemies);
+		GM.destroyEntitiesCollision(&GM.shoots);
+		GM.displayAllEntities();
+	
 		wrefresh(GM.win);
 		if (GM.ch == 'q' || GM.ch == 'Q')
 			break;

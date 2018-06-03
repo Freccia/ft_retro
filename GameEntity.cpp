@@ -94,13 +94,13 @@ bool				GameEntity::updatePosition(int winX, int winY) {
 }
 
 bool				GameEntity::checkCollision(GameEntity *entity) {
-	if (this == entity)
+	if (this == entity || entity->collided == true || this->collided == true)
 		return false;
 	int		x = entity->getPosX();
 	int		y = entity->getPosY();
 	if (this->_pos.x == x && this->_pos.y == y) {
-		this->collided = true;
-		entity->collided = true;
+		// this->collided = true;
+		// entity->collided = true;
 		return true; // collision happened
 	}
 	return false; // no collision
