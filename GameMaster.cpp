@@ -32,6 +32,8 @@ timeScore(0)
 	this->shoots = NULL;
 	this->nEntities = 0;
 
+	initScenery();
+
 	signal(SIGWINCH, &GameMaster::resizeHandler);
 }
 
@@ -168,15 +170,23 @@ void		GameMaster::moveShoots(void) {
 	}
 }
 
+void		GameMaster::displayScenery(void) {
+	/* scenery */
+	for (int i = 0; i < STARS_NB; i++) {
+		mvwprintw(this->win, this->_scenery[i].getPosY(), this->_scenery[i].getPosX(), this->_scenery[i].getShape().c_str());
+	}
+}
 
 void		GameMaster::displayAllEntities(void) {
-	GameEntity		*ptr;
 
+	GameEntity		*ptr;
+	/* shoots */
 	ptr = this->shoots;
 	while (ptr) {
 		mvwprintw(this->win, ptr->getPosY(), ptr->getPosX(), ptr->getShape().c_str());
 		ptr = ptr->next;
 	}
+	/* ennemies */
 	ptr = this->ennemies;
 	while (ptr) {
 		mvwprintw(this->win, ptr->getPosY(), ptr->getPosX(), ptr->getShape().c_str());
@@ -254,6 +264,23 @@ void		GameMaster::destroyEntitiesCollision(GameEntity ** start) {
 	}
 }
 
+void	GameMaster::initScenery(void) {
+	int		r_y;
+	int		r_x;
+
+	srand(std::time(0));
+	for (int i = 0; i < STARS_NB; i++)
+	{
+		r_x = rand() % (this->winX - 1);
+		r_y = rand() % (this->winY - 1);
+		if (r_y <= 1)
+			r_y++;
+		if (r_x <= 1)
+			r_x++;
+		this->_scenery[i].setPosition(r_x, r_y);
+	}
+}
+
 void		GameMaster::destroyEntities(GameEntity ** start) {
 	GameEntity    *current;
 	GameEntity    *suppr;
@@ -261,7 +288,7 @@ void		GameMaster::destroyEntities(GameEntity ** start) {
 	if (*start != NULL)
 	{
 		current = *start;
-		while (current->next != NULL)
+		while (current != NULL)
 		{
 			mvwprintw(this->win, current->getPosY(), current->getPosX(), " ");
 			suppr = current;

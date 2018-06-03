@@ -28,6 +28,7 @@ play:
 	while(42)
 	{
 		GM.displayBanner();
+		GM.displayScenery();
 		GM.getKey();
 		GM.movePlayer();
 		GM.spawnEntity();
@@ -38,7 +39,7 @@ play:
 		GM.destroyEntitiesCollision(&GM.ennemies);
 		GM.destroyEntitiesCollision(&GM.shoots);
 		GM.displayAllEntities();
-	
+
 		GM.refreshWindow();
 		if (GM.getCharacter() == 'q' || GM.getCharacter() == 'Q')
 			break;
@@ -46,7 +47,6 @@ play:
 		usleep(30000);
 	}
 
-// TODO: GAMEOVER MESSAGE
 	if (GM.gameOverBanner() == true)
 		goto play;
 
