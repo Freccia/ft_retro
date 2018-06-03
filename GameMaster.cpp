@@ -65,6 +65,7 @@ GameMaster::~GameMaster(void) {
 	std::cout << "COLS: " << COLS <<std::endl;
 	std::cout << "_WINX: " << this->_winX <<std::endl;
 	std::cout << "_WINY: " << this->_winY <<std::endl;
+	std::cout << "CHAR: " << this->_ch <<std::endl;
 }
 
 void		GameMaster::resizeHandler(int sig) {
@@ -103,12 +104,19 @@ void		GameMaster::spawnEntity(void) {
 }
 
 bool		GameMaster::gameOverBanner(void) {
+	int				c = 0;
 	std::string		msg = "  GAMEOVER  ";
-	std::string		msg2 = "  Replay ? (Y/y)  ";
 	mvwprintw(this->_win, (this->_winY / 2) - 5, (this->_winX / 2) - 10, msg.c_str());
-	mvwprintw(this->_win, (this->_winY / 2) - 4, (this->_winX / 2) - 10, msg2.c_str());
+	msg = "  Replay ? (Y/y)  ";
+	mvwprintw(this->_win, (this->_winY / 2) - 4, (this->_winX / 2) - 10, msg.c_str());
 	wrefresh(this->_win);
-	int c = getchar();
+
+	c = getchar();
+	//while (c == KEY_LEFT || c == KEY_RIGHT || c == KEY_UP || c == KEY_DOWN || c == ' ')
+	while (c == ' ') {
+		c = getchar();
+	}
+
 	msg = "                     ";
 	mvwprintw(this->_win, (this->_winY / 2) - 5, (this->_winX / 2) - 10, msg.c_str());
 	mvwprintw(this->_win, (this->_winY / 2) - 4, (this->_winX / 2) - 10, msg.c_str());
