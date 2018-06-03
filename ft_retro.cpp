@@ -6,7 +6,7 @@
 /*   By: lfabbro <>                                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/30 15:16:28 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/06/03 11:23:17 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/06/03 14:35:23 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,11 @@ int			main(void)
 {
 	GameMaster		GM;
 
-	//windowBox = subwin(stdscr, _maxY + 2, _maxX + 2, (LINES / 2) - (_maxY / 2), (COLS / 2) - (_maxX / 2));
-	//box(_windowBox, ACS_VLINE, ACS_HLINE);
-	
-
+play:
 	while(42)
 	{
 		GM.displayBanner();
-		GM.ch = getch();
+		GM.getKey();
 		GM.movePlayer();
 		GM.spawnEntity();
 		GM.moveEnnemies();
@@ -42,14 +39,16 @@ int			main(void)
 		GM.destroyEntitiesCollision(&GM.shoots);
 		GM.displayAllEntities();
 	
-		wrefresh(GM.win);
-		if (GM.ch == 'q' || GM.ch == 'Q')
+		GM.refreshWindow();
+		if (GM.getCharacter() == 'q' || GM.getCharacter() == 'Q')
 			break;
 
 		usleep(30000);
 	}
 
-	// TODO: GAMEOVER MESSAGE
+// TODO: GAMEOVER MESSAGE
+	if (GM.gameOverBanner() == true)
+		goto play;
 
 	return 0;
 }
