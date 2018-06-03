@@ -20,6 +20,9 @@ private:
 	int				winX;
 	int				winY;
 
+	WINDOW			*win;
+	Player			pl;
+	int				ch;
 	int				nEntities;
 	clock_t			begin_time;
 	clock_t			timeScore;
@@ -34,21 +37,23 @@ public:
 
 	/*		Members functions		*/
 	static void		resizeHandler(int sig);
+	void			getKey(void);
+	int				getCharacter(void);
 	void			movePlayer(void);
 	void			moveEnnemies(void);
 	void			moveShoots(void);
 	bool			checkPlayerCollision(void);
 	void			spawnEntity(void);
 	void			destroyEntitiesCollision(GameEntity ** start);
+	void			destroyEntities(GameEntity ** start);
 	void			manageCollisionsWith(GameEntity *entity, GameEntity *list);
 	void			displayAllEntities(void);
 	void			displayBanner(void);
 	void			displayScenery(void);
+	bool			gameOverBanner(void);
+	void			refreshWindow(void);
 
 	/*		Attributes		*/
-	WINDOW			*win;
-	Player			pl;
-	int				ch;
 	GameEntity		*ennemies;
 	GameEntity		*shoots;
 

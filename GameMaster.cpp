@@ -72,9 +72,17 @@ void		GameMaster::resizeHandler(int sig) {
 	}
 }
 
+void		GameMaster::getKey(void) {
+	this->ch = getch();
+}
+
+int			GameMaster::getCharacter(void) {
+	return this->ch;
+}
+
 void		GameMaster::spawnEntity(void) {
-	srand(std::time(0));
-	int		r = rand() % this->winY - 2;
+	srand(std::time(0) * std::time(0));
+	int		r = rand() % this->winY;
 	this->nEntities++;
 	if (this->ennemies) {
 		this->ennemies = new GameEntity("(", this->winX - 2, r, -1, 0, this->ennemies);
@@ -84,12 +92,41 @@ void		GameMaster::spawnEntity(void) {
 	}
 }
 
+bool		GameMaster::gameOverBanner(void) {
+	std::string		msg = "  GAMEOVER  ";
+	std::string		msg2 = "  Replay ? (Y/y)  ";
+	mvwprintw(this->win, (this->winY / 2) - 5, (this->winX / 2) - 10, msg.c_str());
+	mvwprintw(this->win, (this->winY / 2) - 4, (this->winX / 2) - 10, msg2.c_str());
+	wrefresh(this->win);
+	int c = getchar();
+	msg = "                     ";
+	mvwprintw(this->win, (this->winY / 2) - 5, (this->winX / 2) - 10, msg.c_str());
+	mvwprintw(this->win, (this->winY / 2) - 4, (this->winX / 2) - 10, msg.c_str());
+	if (c == 'Y' || c == 'y') {
+		// reinitialize all
+		this->destroyEntities(&this->ennemies);
+		this->destroyEntities(&this->shoots);
+		mvwprintw(this->win, this->pl.getPosY(), this->pl.getPosX(), " ");
+		this->pl.setPosition(1, 1);
+		this->begin_time = clock();
+		this->timeScore = 0;
+		this->ch = 0;
+		this->nEntities = 0;
+		return true;
+	}
+	return false;
+}
+
 void		GameMaster::displayBanner(void) {
 	std::string		msg = "    TIMESCORE: ";
 	this->timeScore = float(clock() - this->begin_time);
 	msg.append(std::to_string(this->timeScore));
 	mvprintw(WINBOXY - 2, WINBOXX, msg.c_str());
 	mvprintw(WINBOXY - 3, WINBOXX, "        ");
+}
+
+void		GameMaster::refreshWindow(void) {
+	wrefresh(this->win);
 }
 
 void		GameMaster::manageCollisionsWith(GameEntity *entity, GameEntity *list) {
@@ -241,5 +278,23 @@ void	GameMaster::initScenery(void) {
 		if (r_x <= 1)
 			r_x++;
 		this->_scenery[i].setPosition(r_x, r_y);
+	}
+}
+
+void		GameMaster::destroyEntities(GameEntity ** start) {
+	GameEntity    *current;
+	GameEntity    *suppr;
+
+	if (*start != NULL)
+	{
+		current = *start;
+		while (current != NULL)
+		{
+			mvwprintw(this->win, current->getPosY(), current->getPosX(), " ");
+			suppr = current;
+			current = current->next;
+			delete suppr;
+		}
+		*start = NULL;
 	}
 }
