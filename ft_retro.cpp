@@ -33,6 +33,7 @@ int			main(void)
 		GM.movePlayer();
 		GM.spawnEntity();
 		GM.moveEntities();
+		GM.destroyEntitiesCollision();
 		if (GM.checkPlayerCollision() == true)
 			break ;
 		wrefresh(GM.win);
