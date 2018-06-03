@@ -147,7 +147,7 @@ void		GameMaster::movePlayer(void) {
 			this->pl.setPosition(this->pl.getPosX() - 1, this->pl.getPosY());
 	}
 	else if (this->ch == KEY_RIGHT) {
-		if (this->pl.getPosX() < this->winX - 2)
+		if (this->pl.getPosX() < this->winX - 3)
 			this->pl.setPosition(this->pl.getPosX() + 1, this->pl.getPosY());
 	}
 	else if (this->ch == KEY_UP) {
@@ -159,10 +159,8 @@ void		GameMaster::movePlayer(void) {
 			this->pl.setPosition(this->pl.getPosX(), this->pl.getPosY() + 1);
 	}
 	else if (this->ch == ' ') {
-		if (this->shoots != NULL)
+		if (this->pl.getPosX() < this->winX - 3)
 			this->shoots = this->pl.shoot(this->shoots);
-		else
-			this->shoots = this->pl.shoot(NULL);
 	}
 	mvwprintw(this->win, this->pl.getPosY(), this->pl.getPosX(), this->pl.getShape().c_str());
 }
