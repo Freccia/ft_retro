@@ -7,8 +7,8 @@
 #include <unistd.h>
 
 GameMaster::GameMaster(void) :
-begin_time(clock()),
-timeScore(0)
+_begin_time(clock()),
+_timeScore(0)
 {
 	initscr();
 	if (LINES < MIN_TERM_Y || COLS < MIN_TERM_X)
@@ -24,16 +24,16 @@ timeScore(0)
 	keypad(stdscr, TRUE);
 	curs_set(FALSE);
 
-	this->winY = LINES - (LINES/2);
-	this->winX = COLS - (LINES/2);
-	this->win = subwin(stdscr, this->winY, this->winX, WINBOXY, WINBOXX);
-	box(win, '|', '-');
+	this->_winY = LINES - (LINES/2);
+	this->_winX = COLS - (LINES/2);
+	this->_win = subwin(stdscr, this->_winY, this->_winX, WINBOXY, WINBOXX);
+	box(_win, '|', '-');
 
 	this->ennemies = NULL;
 	this->shoots = NULL;
-	this->nEntities = 0;
-	this->difficultyLevel = 30000;
-	this->lastTime = 0;
+	this->_nEntities = 0;
+	this->_difficultyLevel = 30000;
+	this->_lastTime = 0;
 
 	initScenery();
 
@@ -63,8 +63,8 @@ GameMaster::~GameMaster(void) {
 	std::cout << "SHOOTS: " << j <<std::endl;
 	std::cout << "LINES: " << LINES <<std::endl;
 	std::cout << "COLS: " << COLS <<std::endl;
-	std::cout << "WINX: " << this->winX <<std::endl;
-	std::cout << "WINY: " << this->winY <<std::endl;
+	std::cout << "_WINX: " << this->_winX <<std::endl;
+	std::cout << "_WINY: " << this->_winY <<std::endl;
 }
 
 void		GameMaster::resizeHandler(int sig) {
@@ -76,52 +76,52 @@ void		GameMaster::resizeHandler(int sig) {
 }
 
 void		GameMaster::getKey(void) {
-	this->ch = getch();
+	this->_ch = getch();
 }
 
 int			GameMaster::getCharacter(void) {
-	return this->ch;
+	return this->_ch;
 }
 
 int			GameMaster::getDifficultyLevel(void) {
-	return this->difficultyLevel;
+	return this->_difficultyLevel;
 }
 
 void		GameMaster::spawnEntity(void) {
 	srand(std::time(0) * std::time(0));
-	int		r = rand() % this->winY;
-	this->nEntities++;
+	int		r = rand() % this->_winY;
+	this->_nEntities++;
 	if (this->ennemies) {
 		if (r % 2)
-			this->ennemies = new GameEntity("(", this->winX - 2, r, -1, 0, this->ennemies);
+			this->ennemies = new GameEntity("(", this->_winX - 2, r, -1, 0, this->ennemies);
 		else
-			this->ennemies = new NastyFive("5", this->winX - 2, r, -1, 0, this->ennemies);
+			this->ennemies = new NastyFive("5", this->_winX - 2, r, -1, 0, this->ennemies);
 	}
 	else {
-		this->ennemies = new GameEntity("(", this->winX - 2, r, -1, 0, NULL);
+		this->ennemies = new GameEntity("(", this->_winX - 2, r, -1, 0, NULL);
 	}
 }
 
 bool		GameMaster::gameOverBanner(void) {
 	std::string		msg = "  GAMEOVER  ";
 	std::string		msg2 = "  Replay ? (Y/y)  ";
-	mvwprintw(this->win, (this->winY / 2) - 5, (this->winX / 2) - 10, msg.c_str());
-	mvwprintw(this->win, (this->winY / 2) - 4, (this->winX / 2) - 10, msg2.c_str());
-	wrefresh(this->win);
+	mvwprintw(this->_win, (this->_winY / 2) - 5, (this->_winX / 2) - 10, msg.c_str());
+	mvwprintw(this->_win, (this->_winY / 2) - 4, (this->_winX / 2) - 10, msg2.c_str());
+	wrefresh(this->_win);
 	int c = getchar();
 	msg = "                     ";
-	mvwprintw(this->win, (this->winY / 2) - 5, (this->winX / 2) - 10, msg.c_str());
-	mvwprintw(this->win, (this->winY / 2) - 4, (this->winX / 2) - 10, msg.c_str());
+	mvwprintw(this->_win, (this->_winY / 2) - 5, (this->_winX / 2) - 10, msg.c_str());
+	mvwprintw(this->_win, (this->_winY / 2) - 4, (this->_winX / 2) - 10, msg.c_str());
 	if (c == 'Y' || c == 'y') {
 		// reinitialize all
 		this->destroyEntities(&this->ennemies);
 		this->destroyEntities(&this->shoots);
-		mvwprintw(this->win, this->pl.getPosY(), this->pl.getPosX(), " ");
-		this->pl.setPosition(1, 1);
-		this->begin_time = clock();
-		this->timeScore = 0;
-		this->ch = 0;
-		this->nEntities = 0;
+		mvwprintw(this->_win, this->_pl.getPosY(), this->_pl.getPosX(), " ");
+		this->_pl.setPosition(1, 1);
+		this->_begin_time = clock();
+		this->_timeScore = 0;
+		this->_ch = 0;
+		this->_nEntities = 0;
 		return true;
 	}
 	return false;
@@ -129,21 +129,21 @@ bool		GameMaster::gameOverBanner(void) {
 
 void		GameMaster::displayBanner(void) {
 	std::string		msg = "    TIMESCORE: ";
-	this->timeScore = float(clock() - this->begin_time);
-	msg.append(std::to_string(this->timeScore));
+	this->_timeScore = float(clock() - this->_begin_time);
+	msg.append(std::to_string(this->_timeScore));
 	msg.append("    DIFFICULTY: ");
-	msg.append(std::to_string(this->difficultyLevel));
+	msg.append(std::to_string(this->_difficultyLevel));
 	mvprintw(WINBOXY - 2, WINBOXX, msg.c_str());
 	mvprintw(WINBOXY - 3, WINBOXX, "        ");
 }
 
 void		GameMaster::refreshWindow(void) {
-	if (clock() - this->lastTime > DIFFICULTY_SPEED) {
-		if (this->difficultyLevel > 10000)
-			this->difficultyLevel -= 50;
-		this->lastTime = clock();
+	if (clock() - this->_lastTime > DIFFICULTY_SPEED) {
+		if (this->_difficultyLevel > 10000)
+			this->_difficultyLevel -= 50;
+		this->_lastTime = clock();
 	}
-	wrefresh(this->win);
+	wrefresh(this->_win);
 }
 
 void		GameMaster::manageCollisionsWith(GameEntity *entity, GameEntity *list) {
@@ -166,8 +166,8 @@ void		GameMaster::moveEnnemies(void) {
 	GameEntity		*ptr = this->ennemies;
 
 	while (ptr) {
-		mvwprintw(this->win, ptr->getPosY(), ptr->getPosX(), " ");
-		ptr->updatePosition(this->winX, this->winY);
+		mvwprintw(this->_win, ptr->getPosY(), ptr->getPosX(), " ");
+		ptr->updatePosition(this->_winX, this->_winY);
 		manageCollisionsWith(ptr, this->shoots);
 		ptr = ptr->next;
 	}
@@ -177,10 +177,10 @@ void		GameMaster::moveShoots(void) {
 	GameEntity		*ptr = this->shoots;
 
 	while (ptr) {
-		mvwprintw(this->win, ptr->getPosY(), ptr->getPosX(), " ");
+		mvwprintw(this->_win, ptr->getPosY(), ptr->getPosX(), " ");
 		if (ptr->collided == false)
 		{
-			ptr->updatePosition(this->winX, this->winY);
+			ptr->updatePosition(this->_winX, this->_winY);
 			manageCollisionsWith(ptr, this->ennemies);
 		}
 		ptr = ptr->next;
@@ -190,7 +190,7 @@ void		GameMaster::moveShoots(void) {
 void		GameMaster::displayScenery(void) {
 	/* scenery */
 	for (int i = 0; i < STARS_NB; i++) {
-		mvwprintw(this->win, this->_scenery[i].getPosY(), this->_scenery[i].getPosX(), this->_scenery[i].getShape().c_str());
+		mvwprintw(this->_win, this->_scenery[i].getPosY(), this->_scenery[i].getPosX(), this->_scenery[i].getShape().c_str());
 	}
 }
 
@@ -200,40 +200,40 @@ void		GameMaster::displayAllEntities(void) {
 	/* shoots */
 	ptr = this->shoots;
 	while (ptr) {
-		mvwprintw(this->win, ptr->getPosY(), ptr->getPosX(), ptr->getShape().c_str());
+		mvwprintw(this->_win, ptr->getPosY(), ptr->getPosX(), ptr->getShape().c_str());
 		ptr = ptr->next;
 	}
 	/* ennemies */
 	ptr = this->ennemies;
 	while (ptr) {
-		mvwprintw(this->win, ptr->getPosY(), ptr->getPosX(), ptr->getShape().c_str());
+		mvwprintw(this->_win, ptr->getPosY(), ptr->getPosX(), ptr->getShape().c_str());
 		ptr = ptr->next;
 	}
 }
 
 void		GameMaster::movePlayer(void) {
-	mvwprintw(this->win, this->pl.getPosY(), this->pl.getPosX(), " ");
-	if (this->ch == KEY_LEFT) {
-		if (this->pl.getPosX() > 2)
-			this->pl.setPosition(this->pl.getPosX() - 1, this->pl.getPosY());
+	mvwprintw(this->_win, this->_pl.getPosY(), this->_pl.getPosX(), " ");
+	if (this->_ch == KEY_LEFT) {
+		if (this->_pl.getPosX() > 2)
+			this->_pl.setPosition(this->_pl.getPosX() - 1, this->_pl.getPosY());
 	}
-	else if (this->ch == KEY_RIGHT) {
-		if (this->pl.getPosX() < this->winX - 3)
-			this->pl.setPosition(this->pl.getPosX() + 1, this->pl.getPosY());
+	else if (this->_ch == KEY_RIGHT) {
+		if (this->_pl.getPosX() < this->_winX - 3)
+			this->_pl.setPosition(this->_pl.getPosX() + 1, this->_pl.getPosY());
 	}
-	else if (this->ch == KEY_UP) {
-		if (this->pl.getPosY() > 1)
-			this->pl.setPosition(this->pl.getPosX(), this->pl.getPosY() - 1);
+	else if (this->_ch == KEY_UP) {
+		if (this->_pl.getPosY() > 1)
+			this->_pl.setPosition(this->_pl.getPosX(), this->_pl.getPosY() - 1);
 	}
-	else if (this->ch == KEY_DOWN) {
-		if (this->pl.getPosY() < this->winY - 2)
-			this->pl.setPosition(this->pl.getPosX(), this->pl.getPosY() + 1);
+	else if (this->_ch == KEY_DOWN) {
+		if (this->_pl.getPosY() < this->_winY - 2)
+			this->_pl.setPosition(this->_pl.getPosX(), this->_pl.getPosY() + 1);
 	}
-	else if (this->ch == ' ') {
-		if (this->pl.getPosX() < this->winX - 3)
-			this->shoots = this->pl.shoot(this->shoots);
+	else if (this->_ch == ' ') {
+		if (this->_pl.getPosX() < this->_winX - 3)
+			this->shoots = this->_pl.shoot(this->shoots);
 	}
-	mvwprintw(this->win, this->pl.getPosY(), this->pl.getPosX(), this->pl.getShape().c_str());
+	mvwprintw(this->_win, this->_pl.getPosY(), this->_pl.getPosX(), this->_pl.getShape().c_str());
 }
 
 bool			GameMaster::checkPlayerCollision(void) {
@@ -241,8 +241,8 @@ bool			GameMaster::checkPlayerCollision(void) {
 
 	ptr = this->ennemies;
 	while (ptr) {
-		if (this->pl.getPosX() == ptr->getPosX() &&
-			this->pl.getPosY() == ptr->getPosY())
+		if (this->_pl.getPosX() == ptr->getPosX() &&
+			this->_pl.getPosY() == ptr->getPosY())
 			return true;
 		ptr = ptr->next;
 	}
@@ -263,7 +263,7 @@ void		GameMaster::destroyEntitiesCollision(GameEntity ** start) {
 				suppr = current->next;
 				current->next = current->next->next;
 				delete suppr;
-				this->nEntities--;
+				this->_nEntities--;
 			}
 			else
 				current = current->next;
@@ -275,7 +275,7 @@ void		GameMaster::destroyEntitiesCollision(GameEntity ** start) {
 				suppr = *start;
 				*start = (*start)->next;
 				delete suppr;
-				this->nEntities--;
+				this->_nEntities--;
 			}
 		}
 	}
@@ -288,8 +288,8 @@ void	GameMaster::initScenery(void) {
 	srand(std::time(0));
 	for (int i = 0; i < STARS_NB; i++)
 	{
-		r_x = rand() % (this->winX - 1);
-		r_y = rand() % (this->winY - 1);
+		r_x = rand() % (this->_winX - 1);
+		r_y = rand() % (this->_winY - 1);
 		if (r_y <= 1)
 			r_y++;
 		if (r_x <= 1)
@@ -307,7 +307,7 @@ void		GameMaster::destroyEntities(GameEntity ** start) {
 		current = *start;
 		while (current != NULL)
 		{
-			mvwprintw(this->win, current->getPosY(), current->getPosX(), " ");
+			mvwprintw(this->_win, current->getPosY(), current->getPosX(), " ");
 			suppr = current;
 			current = current->next;
 			delete suppr;
