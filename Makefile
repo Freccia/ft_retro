@@ -3,7 +3,7 @@ NAME = ft_retro
 FLAGS = -Wall -Wextra -Werror -std=c++98
 CC = clang++
 
-C_FILES = ft_retro.cpp GameMaster.cpp GameEntity.cpp Player.cpp
+C_FILES = ft_retro.cpp GameMaster.cpp GameEntity.cpp Player.cpp NastyFive.cpp
 
 NCURSES = -lncurses
 
