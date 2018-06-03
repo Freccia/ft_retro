@@ -10,6 +10,12 @@ begin_time(clock()),
 timeScore(0)
 {
 	initscr();
+	if (LINES < MIN_TERM_Y || COLS < MIN_TERM_X)
+	{
+		endwin();
+		std::cerr << "Error : the window is too small." << std::endl;
+		exit(1);
+	}
 	noecho();
 	cbreak();
 	// non-blocking manner: it will return ERR if the key input is not ready
@@ -59,6 +65,7 @@ GameMaster::~GameMaster(void) {
 void		GameMaster::resizeHandler(int sig) {
 	if (sig == SIGWINCH) {
 		endwin();
+		std::cerr << "Error : resize during the game." << std::endl;
 		exit(1);
 	}
 }
@@ -84,15 +91,15 @@ void		GameMaster::spawnEntity(void) {
 }
 
 bool		GameMaster::gameOverBanner(void) {
-	std::string		msg = " GAMEOVER ";
-	std::string		msg2 = " Replay ? (Y/y) ";
-	mvprintw(WINBOXY + WINBOXY, WINBOXX + WINBOXX, msg.c_str());
-	mvprintw(WINBOXY + WINBOXY + 1, WINBOXX + WINBOXX, msg2.c_str());
+	std::string		msg = "  GAMEOVER  ";
+	std::string		msg2 = "  Replay ? (Y/y)  ";
+	mvwprintw(this->win, (this->winY / 2) - 5, (this->winX / 2) - 10, msg.c_str());
+	mvwprintw(this->win, (this->winY / 2) - 4, (this->winX / 2) - 10, msg2.c_str());
 	wrefresh(this->win);
 	int c = getchar();
-	msg = "                   ";
-	mvprintw(WINBOXY + WINBOXY, WINBOXX + WINBOXX, msg.c_str());
-	mvprintw(WINBOXY + WINBOXY + 1, WINBOXX + WINBOXX, msg.c_str());
+	msg = "                     ";
+	mvwprintw(this->win, (this->winY / 2) - 5, (this->winX / 2) - 10, msg.c_str());
+	mvwprintw(this->win, (this->winY / 2) - 4, (this->winX / 2) - 10, msg.c_str());
 	if (c == 'Y' || c == 'y') {
 		// reinitialize all
 		this->destroyEntities(&this->ennemies);
@@ -184,7 +191,7 @@ void		GameMaster::movePlayer(void) {
 			this->pl.setPosition(this->pl.getPosX() - 1, this->pl.getPosY());
 	}
 	else if (this->ch == KEY_RIGHT) {
-		if (this->pl.getPosX() < this->winX - 2)
+		if (this->pl.getPosX() < this->winX - 3)
 			this->pl.setPosition(this->pl.getPosX() + 1, this->pl.getPosY());
 	}
 	else if (this->ch == KEY_UP) {
@@ -196,10 +203,8 @@ void		GameMaster::movePlayer(void) {
 			this->pl.setPosition(this->pl.getPosX(), this->pl.getPosY() + 1);
 	}
 	else if (this->ch == ' ') {
-		if (this->shoots != NULL)
+		if (this->pl.getPosX() < this->winX - 3)
 			this->shoots = this->pl.shoot(this->shoots);
-		else
-			this->shoots = this->pl.shoot(NULL);
 	}
 	mvwprintw(this->win, this->pl.getPosY(), this->pl.getPosX(), this->pl.getShape().c_str());
 }
@@ -258,6 +263,7 @@ void		GameMaster::destroyEntities(GameEntity ** start) {
 		current = *start;
 		while (current->next != NULL)
 		{
+			mvwprintw(this->win, current->getPosY(), current->getPosX(), " ");
 			suppr = current;
 			current = current->next;
 			delete suppr;

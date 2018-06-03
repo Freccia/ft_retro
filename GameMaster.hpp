@@ -8,6 +8,8 @@
 
 #define WINBOXX 10
 #define WINBOXY 10
+#define MIN_TERM_X 50
+#define MIN_TERM_Y 30
 
 class GameMaster {
 private:
@@ -37,7 +39,6 @@ public:
 	void			moveShoots(void);
 	bool			checkPlayerCollision(void);
 	void			spawnEntity(void);
-	void			displayEntities(void);
 	void			destroyEntitiesCollision(GameEntity ** start);
 	void			destroyEntities(GameEntity ** start);
 	void			manageCollisionsWith(GameEntity *entity, GameEntity *list);
