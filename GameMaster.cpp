@@ -10,6 +10,12 @@ begin_time(clock()),
 timeScore(0)
 {
 	initscr();
+	if (LINES < MIN_TERM_Y || COLS < MIN_TERM_X)
+	{
+		endwin();
+		std::cerr << "Error : the window is too small." << std::endl;
+		exit(1);
+	}
 	noecho();
 	cbreak();
 	// non-blocking manner: it will return ERR if the key input is not ready
@@ -59,6 +65,7 @@ GameMaster::~GameMaster(void) {
 void		GameMaster::resizeHandler(int sig) {
 	if (sig == SIGWINCH) {
 		endwin();
+		std::cerr << "Error : resize during the game." << std::endl;
 		exit(1);
 	}
 }
