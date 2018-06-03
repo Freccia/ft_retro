@@ -19,7 +19,7 @@ private:
 
 	int				nEntities;
 	clock_t			begin_time;
-	float			_time;
+	clock_t			_lastSpawn;
 
 public:
 	GameMaster(void);

@@ -6,7 +6,8 @@
 #include <unistd.h>
 
 GameMaster::GameMaster(void) :
-begin_time(clock())
+begin_time(clock()),
+_lastSpawn(0)
 {
 	initscr();
 	noecho();
@@ -63,14 +64,18 @@ void		GameMaster::resizeHandler(int sig) {
 }
 
 void		GameMaster::spawnEntity(void) {
-
-	// t_time
-	this->nEntities++;
-	if (this->ennemies) {
-		this->ennemies = new GameEntity("(", this->winX - 2, this->winY / 2, -1, 0, this->ennemies);
-	}
-	else {
+	//float time = float(clock() - this->_lastSpawn);
+	//if (time < 90.0)
+	//	return;
+	mvprintw(WINBOXY - 3, WINBOXX, "SPAWN!!");
+	this->_lastSpawn = clock() - this->_lastSpawn;
+	if (this->ennemies == NULL) {
 		this->ennemies = new GameEntity("(", this->winX - 2, this->winY / 2, -1, 0, NULL);
+		this->nEntities++;
+	}
+	for (int i=0; i < 20; i++) {
+		this->ennemies = new GameEntity("(", this->winX + i, this->winY / 2, -1, 0, this->ennemies);
+		this->nEntities++;
 	}
 }
 
@@ -86,9 +91,16 @@ void		GameMaster::displayEntities(void) {
 */
 
 void		GameMaster::displayBanner(void) {
-	this->_time = float(clock() - this->begin_time);
-	std::string		msg = std::to_string(this->_time);
+	float time = float(clock() - this->begin_time);
+	std::string		msg = "CLOCK: ";
+	msg.append(std::to_string(time));
+	msg.append("    LASTSPAWN: ");
+	msg.append(std::to_string(this->_lastSpawn));
+	time = float(clock() - this->_lastSpawn);
+	msg.append("    DIFF: ");
+	msg.append(std::to_string(time));
 	mvprintw(WINBOXY - 2, WINBOXX, msg.c_str());
+	mvprintw(WINBOXY - 3, WINBOXX, "        ");
 }
 
 void		GameMaster::manageShootsCollisions(GameEntity *entity_to_check) {
